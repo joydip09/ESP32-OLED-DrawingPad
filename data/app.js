@@ -11,3 +11,14 @@ async function sendCmd(cmd) {
     `${cmd} Total: ${(end - start).toFixed(1)} ms OLED: ${oledTime} ms`,
   );
 }
+
+const canvas = document.getElementById("drawingCanvas");
+
+canvas.addEventListener("click", (event) => {
+  const rect = canvas.getBoundingClientRect();
+
+  const x = event.clientX - rect.left;
+  const y = event.clientY - rect.top;
+
+  console.log(`Canvas clicked at (${Math.floor(x)}, ${Math.floor(y)})`);
+});
