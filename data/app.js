@@ -16,7 +16,23 @@ const canvas = document.getElementById("drawingCanvas");
 
 const ctx = canvas.getContext("2d");
 
-canvas.addEventListener("click", (event) => {
+let isDrawing = false;
+
+canvas.addEventListener("mousedown", () => {
+  isDrawing = true;
+});
+
+canvas.addEventListener("mouseup", () => {
+  isDrawing = false;
+});
+
+canvas.addEventListener("mouseleave", () => {
+  isDrawing = false;
+});
+
+canvas.addEventListener("mousemove", (event) => {
+  if (!isDrawing) return;
+
   const rect = canvas.getBoundingClientRect();
 
   const scaleX = canvas.width / rect.width;
@@ -25,13 +41,5 @@ canvas.addEventListener("click", (event) => {
   const x = Math.floor((event.clientX - rect.left) * scaleX);
   const y = Math.floor((event.clientY - rect.top) * scaleY);
 
-  console.log(`Canvas clicked at (${x}, ${y})`);
-
-  ctx.fillStyle = "black";
-  ctx.fillRect(x - 2, y - 2, 4, 4);
-
-  fetch(`/pixel?x=${x}&y=${y}`)
-    .then((response) => response.text())
-    .then((data) => console.log(data))
-    .catch((error) => console.error(error));
+  console.log(`Drawing at (${x}, ${y})`);
 });
