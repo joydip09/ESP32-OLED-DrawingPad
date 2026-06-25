@@ -99,21 +99,8 @@ void handleJS()
 
 void handleClear()
 {
-    uint32_t start = millis();
-
-    Serial.println("GET /clear");
-
     display.clearDisplay();
     display.display();
-    
-    uint32_t oledTime = millis() - start;
-
-    server.send(200, "text/plain", String(oledTime));
-
-    Serial.printf(
-        "Clear time: %lu ms\n",
-        millis() - start
-    );
 
     server.send(
         200,
