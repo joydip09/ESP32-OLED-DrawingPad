@@ -17,8 +17,11 @@ const canvas = document.getElementById("drawingCanvas");
 canvas.addEventListener("click", (event) => {
   const rect = canvas.getBoundingClientRect();
 
-  const x = event.clientX - rect.left;
-  const y = event.clientY - rect.top;
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+
+  const x = Math.floor((event.clientX - rect.left) * scaleX);
+  const y = Math.floor((event.clientY - rect.top) * scaleY);
 
   console.log(`Canvas clicked at (${Math.floor(x)}, ${Math.floor(y)})`);
 });
