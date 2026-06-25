@@ -187,6 +187,8 @@ void handleCircle()
     );
 }
 
+
+
 void setup()
 {
     Serial.begin(115200);
@@ -283,6 +285,14 @@ void setup()
     server.on("/clear", handleClear);
     server.on("/rect", handleRect);
     server.on("/circle", handleCircle);
+    server.on("/pixel", HTTP_GET, []() {
+    int x = server.arg("x").toInt();
+    int y = server.arg("y").toInt();
+
+    Serial.printf("Received: (%d, %d)\n", x, y);
+
+    server.send(200, "text/plain", "Coordinates received");
+});
     server.on("/style.css", handleCSS);
     server.on("/app.js", handleJS);
 

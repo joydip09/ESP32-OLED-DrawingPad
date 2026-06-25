@@ -24,4 +24,9 @@ canvas.addEventListener("click", (event) => {
   const y = Math.floor((event.clientY - rect.top) * scaleY);
 
   console.log(`Canvas clicked at (${x}, ${y})`);
+
+  fetch(`/pixel?x=${x}&y=${y}`)
+    .then((response) => response.text())
+    .then((data) => console.log(data))
+    .catch((error) => console.error(error));
 });
