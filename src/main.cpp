@@ -215,6 +215,9 @@ void setup()
 
     listFiles();
 
+    Wire.begin();
+    Wire.setClock(400000);
+
     Serial.println("[2] Initializing OLED");
 
     if (!display.begin(
