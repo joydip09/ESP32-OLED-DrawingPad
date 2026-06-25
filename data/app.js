@@ -23,5 +23,5 @@ canvas.addEventListener("click", (event) => {
   const x = Math.floor((event.clientX - rect.left) * scaleX);
   const y = Math.floor((event.clientY - rect.top) * scaleY);
 
-  console.log(`Canvas clicked at (${Math.floor(x)}, ${Math.floor(y)})`);
+  console.log(`Canvas clicked at (${x}, ${y})`);
 });
