@@ -122,72 +122,6 @@ void handleClear()
     );
 }
 
-void handleRect()
-{
-    uint32_t start = millis();
-
-    display.clearDisplay();
-
-    display.drawRect(
-        20,
-        10,
-        80,
-        40,
-        SSD1306_WHITE
-    );
-
-    display.display();
-
-    uint32_t oledTime = millis() - start;
-
-    server.send(200, "text/plain", String(oledTime));
-
-    Serial.printf(
-        "Rect draw time: %lu ms\n",
-        millis() - start
-    );
-
-    server.send(
-        200,
-        "text/plain",
-        "OK"
-    );
-}
-
-void handleCircle()
-{
-    uint32_t start = millis();
-
-    Serial.println("GET /circle");
-
-    display.clearDisplay();
-
-    display.drawCircle(
-        64,
-        32,
-        20,
-        SSD1306_WHITE
-    );
-
-    display.display();
-
-    uint32_t oledTime = millis() - start;
-
-    server.send(200, "text/plain", String(oledTime));
-
-    Serial.printf(
-        "Circle draw time: %lu ms\n",
-        millis() - start
-    );
-
-    server.send(
-        200,
-        "text/plain",
-        "OK"
-    );
-}
-
-
 
 void setup()
 {
@@ -286,8 +220,6 @@ void setup()
 
     server.on("/", handleRoot);
     server.on("/clear", handleClear);
-    server.on("/rect", handleRect);
-    server.on("/circle", handleCircle);
     server.on("/pixel", HTTP_GET, []() {
     int x = server.arg("x").toInt();
     int y = server.arg("y").toInt();

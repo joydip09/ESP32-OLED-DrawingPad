@@ -8,9 +8,7 @@
   <body>
     <h1>ESP32 OLED Drawing Pad</h1>
 
-    <button onclick="sendCmd('rect')">Rectangle</button>
-    <button onclick="sendCmd('circle')">Circle</button>
-    <button onclick="sendCmd('clear')">Clear</button>
+    <button id="clearButton">Clear</button>
 
     <canvas id="drawingCanvas" width="512" height="256"></canvas>
 
