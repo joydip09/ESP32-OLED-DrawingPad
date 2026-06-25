@@ -18,8 +18,25 @@ const ctx = canvas.getContext("2d");
 
 let isDrawing = false;
 
-canvas.addEventListener("mousedown", () => {
+function drawPoint(x, y) {
+  ctx.fillStyle = "black";
+  ctx.fillRect(x - 2, y - 2, 4, 4);
+
+  fetch(`/pixel?x=${x}&y=${y}`).catch((error) => console.error(error));
+}
+
+canvas.addEventListener("mousedown", (event) => {
   isDrawing = true;
+
+  const rect = canvas.getBoundingClientRect();
+
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+
+  const x = Math.floor((event.clientX - rect.left) * scaleX);
+  const y = Math.floor((event.clientY - rect.top) * scaleY);
+
+  drawPoint(x, y);
 });
 
 canvas.addEventListener("mouseup", () => {
@@ -42,4 +59,6 @@ canvas.addEventListener("mousemove", (event) => {
   const y = Math.floor((event.clientY - rect.top) * scaleY);
 
   console.log(`Drawing at (${x}, ${y})`);
+
+  drawPoint(x, y);
 });
