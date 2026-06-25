@@ -10,3 +10,16 @@ button {
   margin: 10px;
   font-size: 20px;
 }
+
+#drawingCanvas {
+  display: block;
+  width: 100%;
+  max-width: 512px;
+  height: auto;
+  margin: 1rem auto;
+  border: 2px solid #555;
+  border-radius: 8px;
+  background: #fff;
+  cursor: crosshair;
+  image-rendering: pixelated;
+}
