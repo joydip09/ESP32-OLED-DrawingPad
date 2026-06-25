@@ -289,7 +289,19 @@ void setup()
     int x = server.arg("x").toInt();
     int y = server.arg("y").toInt();
 
-    Serial.printf("Received: (%d, %d)\n", x, y);
+    int oledX = x / 4;
+    int oledY = y / 4;
+
+    Serial.printf(
+        "Canvas:(%d,%d) -> OLED:(%d,%d)\n",
+        x,
+        y,
+        oledX,
+        oledY
+    );
+
+    display.drawPixel(oledX, oledY, SSD1306_WHITE);
+    display.display();
 
     server.send(200, "text/plain", "Coordinates received");
 });
