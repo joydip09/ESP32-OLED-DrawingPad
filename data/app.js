@@ -14,6 +14,8 @@ async function sendCmd(cmd) {
 
 const canvas = document.getElementById("drawingCanvas");
 
+const ctx = canvas.getContext("2d");
+
 canvas.addEventListener("click", (event) => {
   const rect = canvas.getBoundingClientRect();
 
@@ -24,6 +26,9 @@ canvas.addEventListener("click", (event) => {
   const y = Math.floor((event.clientY - rect.top) * scaleY);
 
   console.log(`Canvas clicked at (${x}, ${y})`);
+
+  ctx.fillStyle = "black";
+  ctx.fillRect(x - 2, y - 2, 4, 4);
 
   fetch(`/pixel?x=${x}&y=${y}`)
     .then((response) => response.text())
