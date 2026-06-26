@@ -155,7 +155,7 @@ void onWebSocketEvent(
 
             int x, y;
 
-            if (sscanf((char *)payload, "DRAW,%d,%d", &x, &y) == 3) {
+            if (sscanf((char *)payload, "DRAW,%d,%d", &x, &y) == 2) {
                 drawPixelOnOLED(x, y);
             }
             break;
