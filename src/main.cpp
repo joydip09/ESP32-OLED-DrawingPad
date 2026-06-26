@@ -111,6 +111,22 @@ void handleClear()
     );
 }
 
+void drawPixelOnOLED(int x, int y) {
+    int oledX = x / 4;
+    int oledY = y / 4;
+
+    Serial.printf(
+        "Canvas:(%d,%d) -> OLED:(%d,%d)\n",
+        x,
+        y,
+        oledX,
+        oledY
+    );
+
+    display.drawPixel(oledX, oledY, SSD1306_WHITE);
+    display.display();
+}
+
 void onWebSocketEvent(
     uint8_t clientNum,
     WStype_t type,
@@ -126,9 +142,14 @@ void onWebSocketEvent(
             Serial.printf("Client %u disconnected\n", clientNum);
             break;
 
-        case WStype_TEXT:
-            Serial.printf("Received: %s\n", payload);
+        case WStype_TEXT: {
+            int x, y;
+
+            if (sscanf((char*)payload, "%d,%d", &x, &y) == 2) {
+                drawPixelOnOLED(x, y);
+            }
             break;
+        }
 
         default:
             break;
@@ -237,19 +258,7 @@ void setup()
     int x = server.arg("x").toInt();
     int y = server.arg("y").toInt();
 
-    int oledX = x / 4;
-    int oledY = y / 4;
-
-    Serial.printf(
-        "Canvas:(%d,%d) -> OLED:(%d,%d)\n",
-        x,
-        y,
-        oledX,
-        oledY
-    );
-
-    display.drawPixel(oledX, oledY, SSD1306_WHITE);
-    display.display();
+    drawPixelOnOLED(x, y);
 
     server.send(200, "text/plain", "Coordinates received");
 });

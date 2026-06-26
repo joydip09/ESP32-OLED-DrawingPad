@@ -2,6 +2,7 @@ const socket = new WebSocket(`ws://${window.location.hostname}:81/`);
 
 socket.onopen = () => {
   console.log("WebSocket connected");
+  socket.send("hello");
 };
 
 socket.onclose = () => {
@@ -35,6 +36,7 @@ function drawPoint(x, y) {
   ctx.fillRect(x - 2, y - 2, 4, 4);
 
   fetch(`/pixel?x=${x}&y=${y}`).catch((error) => console.error(error));
+  socket.send(`${x},${y}`);
 }
 
 canvas.addEventListener("mousedown", (event) => {
