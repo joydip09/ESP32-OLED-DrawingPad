@@ -14,6 +14,9 @@
 const char* ssid = "Zero";
 const char* password = "helloworld";
 
+unsigned long lastRefresh = 0;
+const unsigned long REFRESH_INTERVAL = 16;
+
 WebServer server(80);
 WebSocketsServer webSocket(81);
 
@@ -99,15 +102,9 @@ void handleJS()
     file.close();
 }
 
-void clearOLED()
-{
-    display.clearDisplay();
-    display.display();
-}
-
 void handleClear()
 {
-    clearOLED();
+    display.clearDisplay();
 
     server.send(
         200,
@@ -129,7 +126,6 @@ void drawPixelOnOLED(int x, int y) {
     );
 
     display.drawPixel(oledX, oledY, SSD1306_WHITE);
-    display.display();
 }
 
 void onWebSocketEvent(
@@ -149,7 +145,7 @@ void onWebSocketEvent(
 
         case WStype_TEXT: {
             if (strcmp((char *)payload, "CLEAR") == 0) {
-                clearOLED();
+                display.clearDisplay();
                 break;
             }
 
@@ -263,7 +259,6 @@ void setup()
     Serial.println("[4] Registering Routes");
 
     server.on("/", handleRoot);
-    server.on("/clear", handleClear);
     server.on("/style.css", handleCSS);
     server.on("/app.js", handleJS);
 
@@ -286,4 +281,10 @@ void loop()
 {
     server.handleClient();
     webSocket.loop();
+
+    if (millis() - lastRefresh >= REFRESH_INTERVAL)
+    {
+        display.display();
+        lastRefresh += REFRESH_INTERVAL;
+    }
 }
