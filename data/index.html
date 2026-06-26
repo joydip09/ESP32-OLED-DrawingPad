@@ -1,26 +1,50 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ESP32 OLED Drawing Pad</title>
     <link rel="stylesheet" href="style.css" />
   </head>
 
   <body>
-    <h1>ESP32 OLED Drawing Pad</h1>
+    <div class="container">
+      <header>
+        <h1>ESP32 OLED Drawing Pad</h1>
+        <p>Draw in your browser and mirror it to your OLED display.</p>
+      </header>
 
-    <div class="toolbar">
-      <button id="brushBtn">Brush</button>
-      <button id="eraserBtn">Eraser</button>
+      <div class="control-panel">
+        <div class="panel">
+          <h3>Tool</h3>
+
+          <div class="toolbar">
+            <button id="brushBtn">🖌 Brush</button>
+            <button id="eraserBtn">🩹 Eraser</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>Brush Size</h3>
+
+          <div class="brush-size">
+            <button id="size1Btn">1 px</button>
+            <button id="size2Btn">2 px</button>
+            <button id="size3Btn">3 px</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>Actions</h3>
+
+          <button id="clearButton" class="danger">🗑 Clear Canvas</button>
+        </div>
+      </div>
+
+      <div class="canvas-container">
+        <canvas id="drawingCanvas" width="512" height="256"></canvas>
+      </div>
     </div>
-    <div class="brush-size">
-      <button id="size1Btn">1</button>
-      <button id="size2Btn">2</button>
-      <button id="size3Btn">3</button>
-    </div>
-
-    <button id="clearButton">Clear</button>
-
-    <canvas id="drawingCanvas" width="512" height="256"></canvas>
 
     <script src="app.js"></script>
   </body>

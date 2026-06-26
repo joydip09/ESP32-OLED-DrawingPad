@@ -148,6 +148,23 @@ void drawPixelOnOLED(int x, int y) {
     display.drawPixel(oledX, oledY, getCurrentColor());
 }
 
+void drawBrush(int x, int y) {
+    switch (brushSize)
+    {
+        case 1:
+            display.drawPixel(x, y, getCurrentColor());
+            break;
+
+        case 2:
+            display.fillCircle(x, y, 1, getCurrentColor());
+            break;
+
+        case 3:
+            display.fillCircle(x, y, 2, getCurrentColor());
+            break;
+    }
+}
+
 void drawLineOnOLED(int x1, int y1, int x2, int y2) {
     int oledX1 = x1 / 4;
     int oledY1 = y1 / 4;
@@ -167,13 +184,26 @@ void drawLineOnOLED(int x1, int y1, int x2, int y2) {
         oledY2
     );
 
-    display.drawLine(
-        oledX1,
-        oledY1,
-        oledX2,
-        oledY2,
-        getCurrentColor()
-    );
+    int dx = oledX2 - oledX1;
+    int dy = oledY2 - oledY1;
+
+    int steps = max(abs(dx), abs(dy));
+
+    if (steps == 0)
+    {
+        drawBrush(oledX1, oledY1);
+    }
+    else
+    {
+        for (int i = 0; i <= steps; i++)
+        {
+            int x = oledX1 + dx * i / steps;
+            int y = oledY1 + dy * i / steps;
+
+            drawBrush(x, y);
+        }
+    }
+    display.display();
 }
 
 void onWebSocketEvent(

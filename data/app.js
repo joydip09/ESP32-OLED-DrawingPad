@@ -4,14 +4,14 @@ const Tool = {
 };
 
 let currentTool = Tool.BRUSH;
-let brushSize = 2;
+let brushSize = 1;
 
 const socket = new WebSocket(`ws://${window.location.hostname}:81/`);
 
 function updateBrushSizeUI() {
-  size1Btn.classList.toggle("active", brushSize === 2);
-  size2Btn.classList.toggle("active", brushSize === 3);
-  size3Btn.classList.toggle("active", brushSize === 4);
+  size1Btn.classList.toggle("active", brushSize === 1);
+  size2Btn.classList.toggle("active", brushSize === 2);
+  size3Btn.classList.toggle("active", brushSize === 3);
 }
 
 function setBrushSize(size) {
@@ -53,7 +53,12 @@ const canvas = document.getElementById("drawingCanvas");
 const ctx = canvas.getContext("2d");
 
 function getCurrentColor() {
-  return currentTool === Tool.BRUSH ? "#000000" : "#ffffff";
+  if (currentTool === Tool.BRUSH) {
+    return "black";
+  } else if (currentTool === Tool.ERASER) {
+    return "white";
+    brushSize = 5;
+  }
 }
 
 ctx.strokeStyle = getCurrentColor();
@@ -85,15 +90,15 @@ clearButton.addEventListener("click", () => {
 });
 
 size1Btn.addEventListener("click", () => {
-  setBrushSize(2);
+  setBrushSize(1);
 });
 
 size2Btn.addEventListener("click", () => {
-  setBrushSize(3);
+  setBrushSize(2);
 });
 
 size3Btn.addEventListener("click", () => {
-  setBrushSize(4);
+  setBrushSize(3);
 });
 
 let isDrawing = false;
