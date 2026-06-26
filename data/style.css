@@ -22,4 +22,5 @@ button {
   background: #fff;
   cursor: crosshair;
   image-rendering: pixelated;
+  touch-action: none;
 }

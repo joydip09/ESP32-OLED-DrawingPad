@@ -21,6 +21,12 @@ const canvas = document.getElementById("drawingCanvas");
 
 const ctx = canvas.getContext("2d");
 
+ctx.strokeStyle = "black";
+ctx.fillStyle = "black";
+ctx.lineWidth = 4;
+ctx.lineCap = "round";
+ctx.lineJoin = "round";
+
 const clearButton = document.getElementById("clearButton");
 
 clearButton.addEventListener("click", () => {
@@ -41,7 +47,9 @@ function drawPoint(x, y) {
 
   if (previousX === null) {
     ctx.beginPath();
-    ctx.moveTo(x, y);
+    ctx.arc(x, y, ctx.lineWidth / 2, 0, 2 * Math.PI);
+    ctx.fillStyle = "black";
+    ctx.fill();
   } else {
     ctx.beginPath();
     ctx.moveTo(previousX, previousY);
@@ -55,6 +63,18 @@ function drawPoint(x, y) {
   socket.send(`DRAW,${x},${y}`);
 }
 
+function getCanvasCoordinates(clientX, clientY) {
+  const rect = canvas.getBoundingClientRect();
+
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+
+  return {
+    x: Math.floor((clientX - rect.left) * scaleX),
+    y: Math.floor((clientY - rect.top) * scaleY),
+  };
+}
+
 canvas.addEventListener("mousedown", (event) => {
   isDrawing = true;
 
@@ -63,13 +83,7 @@ canvas.addEventListener("mousedown", (event) => {
 
   socket.send("START");
 
-  const rect = canvas.getBoundingClientRect();
-
-  const scaleX = canvas.width / rect.width;
-  const scaleY = canvas.height / rect.height;
-
-  const x = Math.floor((event.clientX - rect.left) * scaleX);
-  const y = Math.floor((event.clientY - rect.top) * scaleY);
+  const { x, y } = getCanvasCoordinates(event.clientX, event.clientY);
 
   drawPoint(x, y);
 });
@@ -92,13 +106,47 @@ canvas.addEventListener("mouseleave", () => {
 canvas.addEventListener("mousemove", (event) => {
   if (!isDrawing) return;
 
-  const rect = canvas.getBoundingClientRect();
-
-  const scaleX = canvas.width / rect.width;
-  const scaleY = canvas.height / rect.height;
-
-  const x = Math.floor((event.clientX - rect.left) * scaleX);
-  const y = Math.floor((event.clientY - rect.top) * scaleY);
+  const { x, y } = getCanvasCoordinates(event.clientX, event.clientY);
 
   drawPoint(x, y);
+});
+
+canvas.addEventListener("touchstart", (event) => {
+  event.preventDefault();
+
+  isDrawing = true;
+
+  previousX = null;
+  previousY = null;
+
+  socket.send("START");
+
+  const touch = event.touches[0];
+
+  const { x, y } = getCanvasCoordinates(touch.clientX, touch.clientY);
+
+  drawPoint(x, y);
+});
+
+canvas.addEventListener("touchmove", (event) => {
+  if (!isDrawing) return;
+
+  event.preventDefault();
+
+  const touch = event.touches[0];
+
+  const { x, y } = getCanvasCoordinates(touch.clientX, touch.clientY);
+
+  drawPoint(x, y);
+});
+
+canvas.addEventListener("touchend", () => {
+  if (!isDrawing) return;
+
+  socket.send("END");
+
+  isDrawing = false;
+
+  previousX = null;
+  previousY = null;
 });
