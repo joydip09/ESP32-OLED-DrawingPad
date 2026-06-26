@@ -17,6 +17,11 @@ const char* password = "helloworld";
 unsigned long lastRefresh = 0;
 const unsigned long REFRESH_INTERVAL = 16;
 
+bool drawing = false;
+
+int previousX = 0;
+int previousY = 0;
+
 WebServer server(80);
 WebSocketsServer webSocket(81);
 
@@ -134,6 +139,7 @@ void onWebSocketEvent(
     uint8_t *payload,
     size_t length
 ) {
+    
     switch (type) {
         case WStype_CONNECTED:
             Serial.printf("Client %u connected\n", clientNum);
@@ -144,7 +150,19 @@ void onWebSocketEvent(
             break;
 
         case WStype_TEXT: {
-            if (strcmp((char *)payload, "CLEAR") == 0) {
+            String message = (char *)payload;
+
+            if (message == "START") {
+                drawing = true;
+
+                return;
+            }
+            if (message == "END") {
+                drawing = false;
+
+                return;
+            }
+            if (message == "CLEAR") {
                 display.clearDisplay();
                 break;
             }

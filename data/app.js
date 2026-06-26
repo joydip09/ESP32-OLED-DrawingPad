@@ -41,6 +41,8 @@ function drawPoint(x, y) {
 canvas.addEventListener("mousedown", (event) => {
   isDrawing = true;
 
+  socket.send("START");
+
   const rect = canvas.getBoundingClientRect();
 
   const scaleX = canvas.width / rect.width;
@@ -52,7 +54,11 @@ canvas.addEventListener("mousedown", (event) => {
   drawPoint(x, y);
 });
 
-canvas.addEventListener("mouseup", () => {
+window.addEventListener("mouseup", () => {
+  if (!isDrawing) return;
+
+  socket.send("END");
+
   isDrawing = false;
 });
 
