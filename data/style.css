@@ -51,6 +51,27 @@ header p {
   color: #cbd5e1;
 }
 
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.actions button {
+  flex: auto;
+  width: fit-content;
+  padding: 12px 18px;
+}
+
+#clearButton {
+  background: #e54949;
+  color: #ffffff;
+}
+
+#clearButton:hover {
+  background: #ee2121;
+}
+
 .toolbar,
 .brush-size {
   display: flex;
