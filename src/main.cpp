@@ -22,6 +22,14 @@ bool drawing = false;
 int previousX = 0;
 int previousY = 0;
 
+enum Tool
+{
+    BRUSH,
+    ERASER
+};
+
+Tool currentTool = BRUSH;
+
 WebServer server(80);
 WebSocketsServer webSocket(81);
 

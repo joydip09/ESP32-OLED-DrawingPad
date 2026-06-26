@@ -27,6 +27,13 @@ ctx.lineWidth = 4;
 ctx.lineCap = "round";
 ctx.lineJoin = "round";
 
+const Tool = {
+  BRUSH: "BRUSH",
+  ERASER: "ERASER",
+};
+
+let currentTool = Tool.BRUSH;
+
 const clearButton = document.getElementById("clearButton");
 
 clearButton.addEventListener("click", () => {
