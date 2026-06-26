@@ -1,3 +1,21 @@
+const socket = new WebSocket(`ws://${window.location.hostname}:81/`);
+
+socket.onopen = () => {
+  console.log("WebSocket connected");
+};
+
+socket.onclose = () => {
+  console.log("WebSocket disconnected");
+};
+
+socket.onerror = (error) => {
+  console.error("WebSocket error:", error);
+};
+
+socket.onmessage = (event) => {
+  console.log("Received:", event.data);
+};
+
 const canvas = document.getElementById("drawingCanvas");
 
 const ctx = canvas.getContext("2d");
