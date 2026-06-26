@@ -4,13 +4,36 @@ const Tool = {
 };
 
 let currentTool = Tool.BRUSH;
+let brushSize = 2;
 
 const socket = new WebSocket(`ws://${window.location.hostname}:81/`);
+
+function updateBrushSizeUI() {
+  size1Btn.classList.toggle("active", brushSize === 2);
+  size2Btn.classList.toggle("active", brushSize === 3);
+  size3Btn.classList.toggle("active", brushSize === 4);
+}
+
+function setBrushSize(size) {
+  if (brushSize === size) {
+    return;
+  }
+
+  brushSize = size;
+
+  updateBrushSizeUI();
+
+  socket.send(`SIZE,${size}`);
+}
 
 socket.onopen = () => {
   console.log("WebSocket connected");
 
-  setTool(currentTool);
+  updateToolbar();
+  updateBrushSizeUI();
+
+  socket.send(`TOOL,${currentTool}`);
+  socket.send(`SIZE,${brushSize}`);
 };
 
 socket.onclose = () => {
@@ -41,6 +64,9 @@ ctx.lineJoin = "round";
 
 const brushBtn = document.getElementById("brushBtn");
 const eraserBtn = document.getElementById("eraserBtn");
+const size1Btn = document.getElementById("size1Btn");
+const size2Btn = document.getElementById("size2Btn");
+const size3Btn = document.getElementById("size3Btn");
 const clearButton = document.getElementById("clearButton");
 updateToolbar();
 
@@ -56,6 +82,18 @@ clearButton.addEventListener("click", () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   socket.send("CLEAR");
+});
+
+size1Btn.addEventListener("click", () => {
+  setBrushSize(2);
+});
+
+size2Btn.addEventListener("click", () => {
+  setBrushSize(3);
+});
+
+size3Btn.addEventListener("click", () => {
+  setBrushSize(4);
 });
 
 let isDrawing = false;
@@ -82,8 +120,9 @@ function setTool(tool) {
 
 function drawPoint(x, y) {
   ctx.strokeStyle = getCurrentColor();
-  ctx.lineWidth = 4;
+  ctx.lineWidth = brushSize;
   ctx.lineCap = "round";
+  ctx.lineJoin = "round";
 
   if (previousX === null) {
     ctx.beginPath();

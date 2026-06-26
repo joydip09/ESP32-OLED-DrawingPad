@@ -30,6 +30,8 @@ enum Tool
 
 Tool currentTool = BRUSH;
 
+uint8_t brushSize = 1;
+
 WebServer server(80);
 WebSocketsServer webSocket(81);
 
@@ -206,6 +208,14 @@ void onWebSocketEvent(
                 }
 
                 Serial.printf("Tool: %s\n", toolName.c_str());
+                return;
+            }
+
+            if (message.startsWith("SIZE,"))
+            {
+                brushSize = message.substring(5).toInt();
+                Serial.printf("Brush Size: %u\n", brushSize);
+
                 return;
             }
 
