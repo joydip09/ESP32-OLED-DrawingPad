@@ -15,6 +15,7 @@ const char* ssid = "Zero";
 const char* password = "helloworld";
 
 WebServer server(80);
+WebSocketsServer webSocket(81);
 
 Adafruit_SSD1306 display(
     SCREEN_WIDTH,
@@ -108,6 +109,30 @@ void handleClear()
         "text/plain",
         "OK"
     );
+}
+
+void onWebSocketEvent(
+    uint8_t clientNum,
+    WStype_t type,
+    uint8_t *payload,
+    size_t length
+) {
+    switch (type) {
+        case WStype_CONNECTED:
+            Serial.printf("Client %u connected\n", clientNum);
+            break;
+
+        case WStype_DISCONNECTED:
+            Serial.printf("Client %u disconnected\n", clientNum);
+            break;
+
+        case WStype_TEXT:
+            Serial.printf("Received: %s\n", payload);
+            break;
+
+        default:
+            break;
+    }
 }
 
 
@@ -235,6 +260,9 @@ void setup()
 
     server.begin();
 
+    webSocket.begin();
+    webSocket.onEvent(onWebSocketEvent);
+
     Serial.println("SUCCESS: Server Started");
     Serial.println("==============================\n");
     Serial.printf(
@@ -246,4 +274,5 @@ void setup()
 void loop()
 {
     server.handleClient();
+    webSocket.loop();
 }
