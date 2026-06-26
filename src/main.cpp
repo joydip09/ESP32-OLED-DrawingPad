@@ -187,6 +187,22 @@ void onWebSocketEvent(
 
         case WStype_TEXT: {
             String message = (char *)payload;
+            if (message.startsWith("TOOL,"))
+            {
+                String toolName = message.substring(5);
+
+                if (toolName == "BRUSH")
+                {
+                    currentTool = BRUSH;
+                }
+                else if (toolName == "ERASER")
+                {
+                    currentTool = ERASER;
+                }
+
+                Serial.printf("Tool: %s\n", toolName.c_str());
+                return;
+            }
 
             if (message == "START") {
                 drawing = true;

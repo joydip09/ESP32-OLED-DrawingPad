@@ -1,8 +1,16 @@
+const Tool = {
+  BRUSH: "BRUSH",
+  ERASER: "ERASER",
+};
+
+let currentTool = Tool.BRUSH;
+
 const socket = new WebSocket(`ws://${window.location.hostname}:81/`);
 
 socket.onopen = () => {
   console.log("WebSocket connected");
-  socket.send("hello");
+
+  setTool(currentTool);
 };
 
 socket.onclose = () => {
@@ -27,13 +35,6 @@ ctx.lineWidth = 4;
 ctx.lineCap = "round";
 ctx.lineJoin = "round";
 
-const Tool = {
-  BRUSH: "BRUSH",
-  ERASER: "ERASER",
-};
-
-let currentTool = Tool.BRUSH;
-
 const clearButton = document.getElementById("clearButton");
 
 clearButton.addEventListener("click", () => {
@@ -46,6 +47,11 @@ let isDrawing = false;
 
 let previousX = null;
 let previousY = null;
+
+function setTool(tool) {
+  currentTool = tool;
+  socket.send(`TOOL,${tool}`);
+}
 
 function drawPoint(x, y) {
   ctx.strokeStyle = "black";
