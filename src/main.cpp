@@ -194,6 +194,9 @@ void onWebSocketEvent(
             }
             if (message == "CLEAR") {
                 display.clearDisplay();
+                previousX = -1;
+                previousY = -1;
+                
                 break;
             }
 
