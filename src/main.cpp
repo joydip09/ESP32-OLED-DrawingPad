@@ -196,7 +196,7 @@ void onWebSocketEvent(
                 display.clearDisplay();
                 previousX = -1;
                 previousY = -1;
-                
+
                 break;
             }
 
