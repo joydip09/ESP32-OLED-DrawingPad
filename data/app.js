@@ -31,15 +31,35 @@ clearButton.addEventListener("click", () => {
 
 let isDrawing = false;
 
+let previousX = null;
+let previousY = null;
+
 function drawPoint(x, y) {
-  ctx.fillStyle = "black";
-  ctx.fillRect(x - 2, y - 2, 4, 4);
+  ctx.strokeStyle = "black";
+  ctx.lineWidth = 4;
+  ctx.lineCap = "round";
+
+  if (previousX === null) {
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+  } else {
+    ctx.beginPath();
+    ctx.moveTo(previousX, previousY);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+  }
+
+  previousX = x;
+  previousY = y;
 
   socket.send(`DRAW,${x},${y}`);
 }
 
 canvas.addEventListener("mousedown", (event) => {
   isDrawing = true;
+
+  previousX = null;
+  previousY = null;
 
   socket.send("START");
 
@@ -60,6 +80,9 @@ window.addEventListener("mouseup", () => {
   socket.send("END");
 
   isDrawing = false;
+
+  previousX = null;
+  previousY = null;
 });
 
 canvas.addEventListener("mouseleave", () => {
