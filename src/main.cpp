@@ -133,6 +133,34 @@ void drawPixelOnOLED(int x, int y) {
     display.drawPixel(oledX, oledY, SSD1306_WHITE);
 }
 
+void drawLineOnOLED(int x1, int y1, int x2, int y2) {
+    int oledX1 = x1 / 4;
+    int oledY1 = y1 / 4;
+
+    int oledX2 = x2 / 4;
+    int oledY2 = y2 / 4;
+
+    Serial.printf(
+        "Canvas:(%d,%d)->(%d,%d) -> OLED:(%d,%d)->(%d,%d)\n",
+        x1,
+        y1,
+        x2,
+        y2,
+        oledX1,
+        oledY1,
+        oledX2,
+        oledY2
+    );
+
+    display.drawLine(
+        oledX1,
+        oledY1,
+        oledX2,
+        oledY2,
+        SSD1306_WHITE
+    );
+}
+
 void onWebSocketEvent(
     uint8_t clientNum,
     WStype_t type,
@@ -154,6 +182,8 @@ void onWebSocketEvent(
 
             if (message == "START") {
                 drawing = true;
+                previousX = -1;
+                previousY = -1;
 
                 return;
             }
@@ -170,7 +200,14 @@ void onWebSocketEvent(
             int x, y;
 
             if (sscanf((char *)payload, "DRAW,%d,%d", &x, &y) == 2) {
-                drawPixelOnOLED(x, y);
+                if (previousX == -1) {
+                    drawPixelOnOLED(x, y);
+                } else {
+                    drawLineOnOLED(previousX, previousY, x, y);
+                }
+
+                previousX = x;
+                previousY = y;
             }
             break;
         }
