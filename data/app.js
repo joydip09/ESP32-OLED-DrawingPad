@@ -40,18 +40,17 @@ ctx.lineCap = "round";
 ctx.lineJoin = "round";
 
 const brushBtn = document.getElementById("brushBtn");
+const eraserBtn = document.getElementById("eraserBtn");
+const clearButton = document.getElementById("clearButton");
+updateToolbar();
 
 brushBtn.addEventListener("click", () => {
   setTool(Tool.BRUSH);
 });
 
-const eraserBtn = document.getElementById("eraserBtn");
-
 eraserBtn.addEventListener("click", () => {
   setTool(Tool.ERASER);
 });
-
-const clearButton = document.getElementById("clearButton");
 
 clearButton.addEventListener("click", () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -72,6 +71,10 @@ function updateToolbar() {
 }
 
 function setTool(tool) {
+  if (currentTool === tool) {
+    return;
+  }
+
   currentTool = tool;
   updateToolbar();
   socket.send(`TOOL,${tool}`);
