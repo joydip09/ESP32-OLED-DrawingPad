@@ -26,7 +26,7 @@ const clearButton = document.getElementById("clearButton");
 clearButton.addEventListener("click", () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  fetch("/clear").catch((error) => console.error(error));
+  socket.send("CLEAR");
 });
 
 let isDrawing = false;
@@ -35,8 +35,7 @@ function drawPoint(x, y) {
   ctx.fillStyle = "black";
   ctx.fillRect(x - 2, y - 2, 4, 4);
 
-  fetch(`/pixel?x=${x}&y=${y}`).catch((error) => console.error(error));
-  socket.send(`${x},${y}`);
+  socket.send(`DRAW,${x},${y}`);
 }
 
 canvas.addEventListener("mousedown", (event) => {

@@ -99,10 +99,15 @@ void handleJS()
     file.close();
 }
 
-void handleClear()
+void clearOLED()
 {
     display.clearDisplay();
     display.display();
+}
+
+void handleClear()
+{
+    clearOLED();
 
     server.send(
         200,
@@ -143,9 +148,14 @@ void onWebSocketEvent(
             break;
 
         case WStype_TEXT: {
+            if (strcmp((char *)payload, "CLEAR") == 0) {
+                clearOLED();
+                break;
+            }
+
             int x, y;
 
-            if (sscanf((char*)payload, "%d,%d", &x, &y) == 2) {
+            if (sscanf((char *)payload, "DRAW,%d,%d", &x, &y) == 3) {
                 drawPixelOnOLED(x, y);
             }
             break;
@@ -254,14 +264,6 @@ void setup()
 
     server.on("/", handleRoot);
     server.on("/clear", handleClear);
-    server.on("/pixel", HTTP_GET, []() {
-    int x = server.arg("x").toInt();
-    int y = server.arg("y").toInt();
-
-    drawPixelOnOLED(x, y);
-
-    server.send(200, "text/plain", "Coordinates received");
-});
     server.on("/style.css", handleCSS);
     server.on("/app.js", handleJS);
 
