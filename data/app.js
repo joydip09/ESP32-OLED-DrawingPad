@@ -29,11 +29,27 @@ const canvas = document.getElementById("drawingCanvas");
 
 const ctx = canvas.getContext("2d");
 
-ctx.strokeStyle = "black";
-ctx.fillStyle = "black";
+function getCurrentColor() {
+  return currentTool === Tool.BRUSH ? "#000000" : "#ffffff";
+}
+
+ctx.strokeStyle = getCurrentColor();
+ctx.fillStyle = getCurrentColor();
 ctx.lineWidth = 4;
 ctx.lineCap = "round";
 ctx.lineJoin = "round";
+
+const brushBtn = document.getElementById("brushBtn");
+
+brushBtn.addEventListener("click", () => {
+  setTool(Tool.BRUSH);
+});
+
+const eraserBtn = document.getElementById("eraserBtn");
+
+eraserBtn.addEventListener("click", () => {
+  setTool(Tool.ERASER);
+});
 
 const clearButton = document.getElementById("clearButton");
 
@@ -48,20 +64,28 @@ let isDrawing = false;
 let previousX = null;
 let previousY = null;
 
+function updateToolbar() {
+  brushBtn.classList.toggle("active", currentTool === Tool.BRUSH);
+  eraserBtn.classList.toggle("active", currentTool === Tool.ERASER);
+
+  canvas.classList.toggle("eraser", currentTool === Tool.ERASER);
+}
+
 function setTool(tool) {
   currentTool = tool;
+  updateToolbar();
   socket.send(`TOOL,${tool}`);
 }
 
 function drawPoint(x, y) {
-  ctx.strokeStyle = "black";
+  ctx.strokeStyle = getCurrentColor();
   ctx.lineWidth = 4;
   ctx.lineCap = "round";
 
   if (previousX === null) {
     ctx.beginPath();
     ctx.arc(x, y, ctx.lineWidth / 2, 0, 2 * Math.PI);
-    ctx.fillStyle = "black";
+    ctx.fillStyle = getCurrentColor();
     ctx.fill();
   } else {
     ctx.beginPath();

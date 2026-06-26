@@ -24,3 +24,7 @@ button {
   image-rendering: pixelated;
   touch-action: none;
 }
+
+#drawingCanvas.eraser {
+  cursor: not-allowed;
+}

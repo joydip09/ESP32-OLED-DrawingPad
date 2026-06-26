@@ -126,6 +126,11 @@ void handleClear()
     );
 }
 
+uint16_t getCurrentColor()
+{
+    return (currentTool == BRUSH) ? SSD1306_WHITE : SSD1306_BLACK;
+}
+
 void drawPixelOnOLED(int x, int y) {
     int oledX = x / 4;
     int oledY = y / 4;
@@ -138,7 +143,7 @@ void drawPixelOnOLED(int x, int y) {
         oledY
     );
 
-    display.drawPixel(oledX, oledY, SSD1306_WHITE);
+    display.drawPixel(oledX, oledY, getCurrentColor());
 }
 
 void drawLineOnOLED(int x1, int y1, int x2, int y2) {
@@ -165,7 +170,7 @@ void drawLineOnOLED(int x1, int y1, int x2, int y2) {
         oledY1,
         oledX2,
         oledY2,
-        SSD1306_WHITE
+        getCurrentColor()
     );
 }
 
